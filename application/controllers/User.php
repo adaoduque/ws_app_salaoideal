@@ -243,6 +243,24 @@ class User extends REST_Controller {
     }
 
     /**
+     * @description validate the token 
+     * @param  Authorization, parameter header
+     * @return void
+     */
+    protected function token_validate() {
+        $headers = $this->input->request_headers();
+        if (array_key_exists('Authorization', $headers) && !empty($headers['Authorization'])) {
+            $decodedToken = AUTHORIZATION::validateToken($headers['Authorization']);
+            if ($decodedToken != false) {
+                $this->hash = $decodedToken->hash;
+                $this->code = $decodedToken->code;
+                return true;
+            }
+        }
+        return false;
+    } 
+
+    /**
      * @description for debug
      * @param  data for debug
      * @return void
